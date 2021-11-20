@@ -40,8 +40,8 @@ class PrepareStep(ProcessingStep):
 class HealthModel(ProcessingStep):
     def __init__(self):
         self.model = tf.keras.Sequential([efn.EfficientNetB7(input_shape=(512, 512, 3),
-                                                    weights='noisy-student',
-                                                    include_top=False),
+                                                             weights=None,
+                                                             include_top=False),
                                           L.GlobalAveragePooling2D(),
                                           L.Dense(4, activation='softmax')])
         self.model.load_weights("../data/models/health/en_v1/chekpoint.h5")

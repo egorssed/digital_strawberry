@@ -5,3 +5,6 @@ numpy==1.16.0
 opencv-python
 tensorflow==2.4.1
 efficientnet
+plotly
+pandas
+

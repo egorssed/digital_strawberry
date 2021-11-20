@@ -13,7 +13,7 @@ from flask import Flask, render_template, request, make_response
 from datetime import datetime
 from functools import wraps, update_wrapper
 from shutil import copyfile
-
+from src import visualizations as viz
 
 app = Flask(__name__)
 
@@ -75,9 +75,12 @@ def upload():
 
     inp_img = cv2.imread("static/img/img_now.jpg")
     inp_img = cv2.cvtColor(inp_img, cv2.COLOR_BGR2RGB)
-    preds = pipiline.apply(inp_img)
-    return render_template("uploaded.html", file_path="img/img_now.jpg", preds=preds)
 
+    # Health
+    preds = pipiline.apply(inp_img)
+    viz.healt_visualization(preds)
+
+    return render_template("uploaded.html", file_path="img/img_now.jpg")
 
 
 if __name__ == '__main__':

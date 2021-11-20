@@ -36,7 +36,7 @@ def health_visualization(preds):
 def phase_visualization(preds):
     # Original order ['Berries', 'Flowers', 'Sapling']
     preds = preds[[2, 1, 0]]
-    classes = ['Росток', 'Цветение', 'Ягоды']
+    classes = ['Росток', 'Цветение', 'Зрелый']
     colors = {classes[0]:px.colors.qualitative.Plotly[0],
               classes[1]:px.colors.qualitative.Plotly[0],
               classes[2]:px.colors.qualitative.Plotly[0]
@@ -52,7 +52,7 @@ def phase_visualization(preds):
     colors[pred] = px.colors.qualitative.Plotly[1]
     colors["Росток"] = "seagreen"
     colors["Цветение"] = "yellow"
-    colors["Ягоды"] = "red"
+    colors["Зрелый"] = "red"
     colors = [colors[val] for val in colors.keys()]
     fig = go.Figure(go.Bar(x=classes, y=preds, marker=dict(color=colors)))
     fig.update_layout(height=400, width=800, title_text="Уверенность модели", title_x=0, showlegend=False)

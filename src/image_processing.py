@@ -27,14 +27,33 @@ class ProcessingStep:
         pass
 
 
-class PrepareStep(ProcessingStep):
+class PreparationStep(ProcessingStep):
     def __init__(self):
         pass
 
     def apply(self, data):
-        img = data
-        img = cv2.resize(img/255.0, (512, 512)).reshape(-1, 512, 512, 3).astype(np.float32)
-        return img
+        img = data['img']
+        # img = cv2.resize(img/255.0, (512, 512)).reshape(-1, 512, 512, 3).astype(np.float32)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        data['img'] = img
+        return data
+
+
+class PhaseModel(ProcessingStep):
+    def __init__(self):
+        self.model = tf.keras.Sequential([efn.EfficientNetB7(input_shape=(256, 256, 3),
+                                                             weights=None,
+                                                             include_top=False),
+                                          L.GlobalAveragePooling2D(),
+                                          L.Dense(3, activation='softmax')])
+        self.model.load_weights("../data/models/phase/en_v1/chekpoint.h5")
+
+    def apply(self, data):
+        img = data['img']
+        img = cv2.resize(img/255.0, (256, 256)).reshape(-1, 256, 256, 3).astype(np.float32)
+        preds = self.model.layers[2]( self.model.layers[1]( self.model.layers[0](img)))
+        data['phase_preds'] = preds.numpy()[0]
+        return data
 
 
 class HealthModel(ProcessingStep):
@@ -47,15 +66,19 @@ class HealthModel(ProcessingStep):
         self.model.load_weights("../data/models/health/en_v1/chekpoint.h5")
 
     def apply(self, data):
-        img = data
+        img = data['img']
+        img = cv2.resize(img/255.0, (512, 512)).reshape(-1, 512, 512, 3).astype(np.float32)
         preds = self.model.layers[2]( self.model.layers[1]( self.model.layers[0](img)))
-        return preds.numpy()[0]
+        data['health_preds'] = preds.numpy()[0]
+        return data
+
 
 class ImageProcessing(ProcessingStep):
     def __init__(self):
         self.steps = [
-            PrepareStep(),
+            PreparationStep(),
             HealthModel(),
+            PhaseModel(),
         ]
 
     def apply(self, data):

@@ -74,13 +74,14 @@ def upload():
     copyfile("static/img/img_now.jpg", "static/img/img_normal.jpg")
 
     inp_img = cv2.imread("static/img/img_now.jpg")
-    inp_img = cv2.cvtColor(inp_img, cv2.COLOR_BGR2RGB)
+    inp = {'img': inp_img}
 
     # Health
-    preds = pipiline.apply(inp_img)
-    viz.healt_visualization(preds)
+    preds = pipiline.apply(inp)
+    viz.health_visualization(preds['health_preds'])
+    viz.phase_visualization(preds['phase_preds'])
 
-    return render_template("uploaded.html", file_path="img/img_now.jpg")
+    return render_template("uploaded.html", file_path="img/img_now.jpg", preds=preds)
 
 
 if __name__ == '__main__':

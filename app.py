@@ -1,11 +1,19 @@
+import tensorflow as tf
+
+print()
+print(tf.__version__)
+print()
+
+import cv2
 import numpy as np
 from PIL import Image
-from src import image_processing
+from src.image_processing import ImageProcessing
 import os
 from flask import Flask, render_template, request, make_response
 from datetime import datetime
 from functools import wraps, update_wrapper
 from shutil import copyfile
+
 
 app = Flask(__name__)
 
@@ -50,6 +58,8 @@ def add_header(r):
     return r
 
 
+pipiline = ImageProcessing()
+
 @app.route("/upload", methods=["POST"])
 @nocache
 def upload():
@@ -62,7 +72,12 @@ def upload():
     for file in request.files.getlist("file"):
         file.save("static/img/img_now.jpg")
     copyfile("static/img/img_now.jpg", "static/img/img_normal.jpg")
-    return render_template("uploaded.html", file_path="img/img_now.jpg")
+
+    inp_img = cv2.imread("static/img/img_now.jpg")
+    inp_img = cv2.cvtColor(inp_img, cv2.COLOR_BGR2RGB)
+    preds = pipiline.apply(inp_img)
+    return render_template("uploaded.html", file_path="img/img_now.jpg", preds=preds)
+
 
 
 if __name__ == '__main__':

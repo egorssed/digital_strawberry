@@ -31,7 +31,7 @@ def health_visualization(preds):
     colors["Множественные заболевания"] = "red"
     colors = [colors[val] for val in colors.keys()]
     fig = go.Figure(go.Bar(x=classes, y=preds, marker=dict(color=colors)))
-    fig.update_layout(height=400, width=800, title_text="Уверенность модели", title_x=0, showlegend=False)
+    fig.update_layout(height=400, width=800, title_text="Оценка здоровья", title_x=0, showlegend=False)
     pio.write_html(fig, file="static/plots/health.html", include_plotlyjs="cdn")
 
 
@@ -57,7 +57,7 @@ def phase_visualization(preds):
     colors["Зрелый"] = "red"
     colors = [colors[val] for val in colors.keys()]
     fig = go.Figure(go.Bar(x=classes, y=preds, marker=dict(color=colors)))
-    fig.update_layout(height=400, width=800, title_text="Уверенность модели", title_x=0, showlegend=False)
+    fig.update_layout(height=400, width=800, title_text="Фаза развития растения", title_x=0, showlegend=False)
     pio.write_html(fig, file="static/plots/phase.html", include_plotlyjs="cdn")
 
 

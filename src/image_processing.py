@@ -45,7 +45,7 @@ class SegmentationStep(ProcessingStep):
         self.model = mcmodel.MaskRCNN(mode="inference",
                                       config=CustomConfig(),
                                       model_dir="../data/models/mskrcnn/v1/")
-        self.model.load_weights("../data/models/mskrcnn/v1/chekpoint009.h5", by_name=True)
+        self.model.load_weights("data/models/segmentation/v1/chekpoint009.h5", by_name=True)
         # self.model.keras_model._make_predict_function()
         # self.graph = tf.compat.v1.get_default_graph()
         pass
@@ -64,7 +64,7 @@ class PhaseModel(ProcessingStep):
                                                              include_top=False),
                                           L.GlobalAveragePooling2D(),
                                           L.Dense(3, activation='softmax')])
-        self.model.load_weights("../data/models/phase/en_v1/chekpoint.h5")
+        self.model.load_weights("data/models/phase/en_v1/chekpoint.h5")
 
     def apply(self, data):
         img = data['img']
@@ -81,7 +81,7 @@ class HealthModel(ProcessingStep):
                                                              include_top=False),
                                           L.GlobalAveragePooling2D(),
                                           L.Dense(4, activation='softmax')])
-        self.model.load_weights("../data/models/health/en_v1/chekpoint.h5")
+        self.model.load_weights("data/models/health/en_v1/chekpoint.h5")
 
     def apply(self, data):
         img = data['img']

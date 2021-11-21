@@ -16,3 +16,8 @@ A web-application made with Python and Flask for Digital Strawberries analytics.
 5. Install requirements from `requiremtns.txt`. **Important** - make sure to have correct version of `tensorflow`.
 6. Run the application with `python app.py`
 7. After the server is initialized go to `127.0.0.1:5000`
+
+
+## Synthetic data
+You can find our synthetic data used for trainng segmentation model here:
+`https://drive.google.com/drive/u/1/folders/1TbUACCR6kxPN2-UVMcEVImdDhxNgJ7yR`

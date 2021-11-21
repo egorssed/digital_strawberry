@@ -1,10 +1,13 @@
+import sys
+
+if 'ext/mrcnn/' not in sys.path:
+    sys.path.append('ext/mrcnn/')
+
 import tensorflow as tf
 
 print()
 print(tf.__version__)
 print()
-
-tf.compat.v1.enable_eager_execution()
 
 import cv2
 import numpy as np
@@ -80,12 +83,12 @@ def upload():
 
     # Health
     preds = pipiline.apply(inp)
-    viz.phase_visualization(preds['img'], preds['seg_preds'])
+    viz.seg_visualization(preds['img'], preds['seg_preds'])
     viz.health_visualization(preds['health_preds'])
     viz.phase_visualization(preds['phase_preds'])
 
     return render_template("uploaded.html", file_path="img/img_now.jpg", preds=preds)
 
-
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=False, threaded=False, host="0.0.0.0")
+    # app.run(debug=True, host="0.0.0.0")

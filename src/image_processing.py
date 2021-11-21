@@ -1,16 +1,12 @@
-import sys
-sys.path.append('ext/Mask-RCNN-leekunhee/')
-
-from mrcnn.config import Config as mcConfig
-from mrcnn import model as mcmodel
-
 import cv2
 import numpy as np
-from PIL import Image
 
 import tensorflow as tf
 import tensorflow.keras.layers as L
 import efficientnet.tfkeras as efn
+
+from mrcnn.config import Config as mcConfig
+from mrcnn import model as mcmodel
 
 
 class ProcessingStep:
@@ -43,20 +39,21 @@ class InferenceConfig(CustomConfig):
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
 
+
 class SegmentationStep(ProcessingStep):
     def __init__(self):
         self.model = mcmodel.MaskRCNN(mode="inference",
-                                      config=InferenceConfig(),
+                                      config=CustomConfig(),
                                       model_dir="../data/models/mskrcnn/v1/")
         self.model.load_weights("../data/models/mskrcnn/v1/chekpoint009.h5", by_name=True)
         # self.model.keras_model._make_predict_function()
         # self.graph = tf.compat.v1.get_default_graph()
+        pass
 
     def apply(self, data):
         img = data['img']
-        # with graph.as_default():
         preds = self.model.detect([img], verbose=1)
-        data['seg_preds'] = preds.numpy()[0]
+        data['seg_preds'] = preds
         return data
 
 

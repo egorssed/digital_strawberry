@@ -1,15 +1,12 @@
-import sys
-sys.path.append('ext/Mask-RCNN-leekunhee/')
-
-from mrcnn import visualize
-import matplotlib.pyplot as plt
-
 import numpy as np
+import matplotlib.pyplot as plt
 
 import plotly.io as pio
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
+from mrcnn import visualize
 
 
 def health_visualization(preds):

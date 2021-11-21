@@ -1,3 +1,9 @@
+import sys
+sys.path.append('ext/Mask-RCNN-leekunhee/')
+
+from mrcnn.config import Config as mcConfig
+from mrcnn import model as mcmodel
+
 import cv2
 import numpy as np
 from PIL import Image
@@ -5,18 +11,6 @@ from PIL import Image
 import tensorflow as tf
 import tensorflow.keras.layers as L
 import efficientnet.tfkeras as efn
-
-
-def grayscale():
-    img = Image.open("static/img/img_now.jpg")
-    img_arr = np.asarray(img)
-    r = img_arr[:, :, 0]
-    g = img_arr[:, :, 1]
-    b = img_arr[:, :, 2]
-    new_arr = r.astype(int) + g.astype(int) + b.astype(int)
-    new_arr = (new_arr/3).astype('uint8')
-    new_img = Image.fromarray(new_arr)
-    new_img.save("static/img/img_now.jpg")
 
 
 class ProcessingStep:
@@ -36,6 +30,33 @@ class PreparationStep(ProcessingStep):
         # img = cv2.resize(img/255.0, (512, 512)).reshape(-1, 512, 512, 3).astype(np.float32)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         data['img'] = img
+        return data
+
+class CustomConfig(mcConfig):
+    NAME = "strawberry"
+    IMAGES_PER_GPU = 1
+    NUM_CLASSES = 1 + 1
+    STEPS_PER_EPOCH = 100
+    DETECTION_MIN_CONFIDENCE = 0.9
+
+class InferenceConfig(CustomConfig):
+    GPU_COUNT = 1
+    IMAGES_PER_GPU = 1
+
+class SegmentationStep(ProcessingStep):
+    def __init__(self):
+        self.model = mcmodel.MaskRCNN(mode="inference",
+                                      config=InferenceConfig(),
+                                      model_dir="../data/models/mskrcnn/v1/")
+        self.model.load_weights("../data/models/mskrcnn/v1/chekpoint009.h5", by_name=True)
+        # self.model.keras_model._make_predict_function()
+        # self.graph = tf.compat.v1.get_default_graph()
+
+    def apply(self, data):
+        img = data['img']
+        # with graph.as_default():
+        preds = self.model.detect([img], verbose=1)
+        data['seg_preds'] = preds.numpy()[0]
         return data
 
 
@@ -77,6 +98,7 @@ class ImageProcessing(ProcessingStep):
     def __init__(self):
         self.steps = [
             PreparationStep(),
+            SegmentationStep(),
             HealthModel(),
             PhaseModel(),
         ]

@@ -4,6 +4,8 @@ print()
 print(tf.__version__)
 print()
 
+tf.compat.v1.enable_eager_execution()
+
 import cv2
 import numpy as np
 from PIL import Image
@@ -78,6 +80,7 @@ def upload():
 
     # Health
     preds = pipiline.apply(inp)
+    viz.phase_visualization(preds['img'], preds['seg_preds'])
     viz.health_visualization(preds['health_preds'])
     viz.phase_visualization(preds['phase_preds'])
 

@@ -1,10 +1,12 @@
-
 import numpy as np
+import matplotlib.pyplot as plt
 
 import plotly.io as pio
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
+from mrcnn import visualize
 
 
 def health_visualization(preds):
@@ -57,3 +59,21 @@ def phase_visualization(preds):
     fig = go.Figure(go.Bar(x=classes, y=preds, marker=dict(color=colors)))
     fig.update_layout(height=400, width=800, title_text="Уверенность модели", title_x=0, showlegend=False)
     pio.write_html(fig, file="static/plots/phase.html", include_plotlyjs="cdn")
+
+
+def seg_visualization(img, preds):
+    def get_ax(rows=1, cols=1, size=16):
+        """Return a Matplotlib Axes array to be used in
+        all visualizations in the notebook. Provide a
+        central point to control graph sizes.
+
+        Adjust the size attribute to control how big to render images
+        """
+        _, ax = plt.subplots(rows, cols, figsize=(size*cols, size*rows))
+        return ax
+
+    ax = get_ax(1)
+    r = preds[0]
+    visualize.display_instances(img, r['rois'], r['masks'], r['class_ids'], 
+                                ['background', 'strawberry'], r['scores'], ax=ax,
+                                title="Predictions")

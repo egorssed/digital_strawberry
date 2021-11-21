@@ -1,3 +1,8 @@
+import sys
+
+if 'ext/mrcnn/' not in sys.path:
+    sys.path.append('ext/mrcnn/')
+
 import tensorflow as tf
 
 print()
@@ -78,6 +83,7 @@ def upload():
 
     # Health
     preds = pipiline.apply(inp)
+    viz.seg_visualization(preds['img'], preds['seg_preds'])
     viz.health_visualization(preds['health_preds'])
     viz.phase_visualization(preds['phase_preds'])
 
@@ -108,6 +114,6 @@ def upload():
 
     return render_template("uploaded.html", file_path="img/img_now.jpg", preds=preds, text = text, recomendation=recomendation)
 
-
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=False, threaded=False, host="0.0.0.0")
+    # app.run(debug=True, host="0.0.0.0")

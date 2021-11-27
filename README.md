@@ -2,6 +2,10 @@
 
 A web-application made with Python and Flask for Digital Strawberries analytics.
 
+## Presentation
+
+Overview of the project in Presentation_strawberry.pdf file (in Russian)
+
 ## Instructions
 
 1. Clone the repository

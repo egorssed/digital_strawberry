@@ -6,6 +6,9 @@ A web-application made with Python and Flask for Digital Strawberries analytics.
 
 Overview of the project in Presentation_strawberry.pdf file (in Russian)
 
+Tasks of searching for plant pathologies and determining strawberry growth stage were solved using EfficientNet and public datasets.
+Task of image segmentation was solved using Mask R-CNN trained on synthetically generated data.
+
 ## Instructions
 
 1. Clone the repository
